@@ -8,8 +8,9 @@ public class SerializeAndDeserializeBinaryTree {
         treeNode.right.left = new TreeNode(4);
         treeNode.right.right = new TreeNode(5);
 
+
         System.out.println();
-        String s = serialize(treeNode);
+        String s = serialize(null);
         System.out.println(s);
         deserialize(s);
         //10:46
@@ -35,6 +36,9 @@ public class SerializeAndDeserializeBinaryTree {
     // Decodes your encoded data to tree.
     public static TreeNode deserialize(String data) {
         String[] strings = data.split(",");
+        if(strings[1].equals("end")){
+            return null;
+        }
         TreeNode ans = new TreeNode();
         deserializeTraversal(ans, strings, 1);
 
@@ -46,13 +50,24 @@ public class SerializeAndDeserializeBinaryTree {
 
         if (!strings[i].equals("end")) {
             currentNode.val = Integer.parseInt(strings[i]);
-            currentNode.left = new TreeNode();
-            currentNode.right = new TreeNode();
-            int rightIndex = deserializeTraversal(currentNode.left, strings, i + 1);
-            return deserializeTraversal(currentNode.right, strings, rightIndex);
-        } else {
-            currentNode = null;
+
+
+            int rightIndex =  0;
+            if (!strings[i + 1].equals("end")) {
+                currentNode.left = new TreeNode();
+                rightIndex = deserializeTraversal(currentNode.left, strings, i + 1);
+            }else{
+                rightIndex = deserializeTraversal(null, strings, i + 1);
+            }
+            if (!strings[rightIndex].equals("end")) {
+                currentNode.right = new TreeNode();
+                return deserializeTraversal(currentNode.right, strings, rightIndex);
+            }else{
+                return deserializeTraversal(null, strings, rightIndex);
+            }
+
         }
+
         return i + 1;
 
     }
