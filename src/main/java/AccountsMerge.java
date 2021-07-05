@@ -23,60 +23,7 @@ public class AccountsMerge {
         System.out.println(accountsMerge2(accounts2));
     }
 
-    public static List<List<String>> accountsMerge(List<List<String>> accounts) {
-        Map<String, Set<String>> map = new HashMap<>();
-        Map<String, String> mapOfEmailToPrincipalEmail = new HashMap<>();
-        Map<String, String> mapPrincipalEmailToName = new HashMap<>();
-        for (List<String> account : accounts) {
-            boolean found = false;
-            String principalEmail = "";
-            for (int i = 1; i < account.size(); i++) {
 
-                if (mapOfEmailToPrincipalEmail.containsKey(account.get(i))) {
-                    map.get(mapOfEmailToPrincipalEmail.get(account.get(i))).addAll(account.subList(1, account.size()));
-                    principalEmail = mapOfEmailToPrincipalEmail.get(account.get(i));
-                    for (int j = 1; j < account.size(); j++) {
-                        if (mapOfEmailToPrincipalEmail.containsKey(account.get(j)) && !mapOfEmailToPrincipalEmail.get(account.get(j)).equals(principalEmail)) {
-                            map.get(principalEmail).addAll(map.get(mapOfEmailToPrincipalEmail.get(account.get(j))));
-                            String toRemove = account.get(j);
-                            for (String a : map.get(mapOfEmailToPrincipalEmail.get(toRemove))) {
-                                mapOfEmailToPrincipalEmail.put(a, principalEmail);
-                            }
-                            map.remove(mapOfEmailToPrincipalEmail.get(toRemove));
-                            mapPrincipalEmailToName.remove(mapOfEmailToPrincipalEmail.get(toRemove));
-                        }
-                        mapOfEmailToPrincipalEmail.put(account.get(j), principalEmail);
-                    }
-                    found = true;
-                }
-
-            }
-            if (!found) {
-                for (int i = 1; i < account.size(); i++) {
-                    mapOfEmailToPrincipalEmail.put(account.get(i), account.get(1));
-                }
-                map.put(account.get(1), new HashSet<>(account.subList(1, account.size())));
-                mapPrincipalEmailToName.put(account.get(1), account.get(0));
-            }
-
-        }
-        List<List<String>> ans = new ArrayList<>();
-        mapPrincipalEmailToName.forEach((String principalEmail, String name) -> {
-            mapPrincipalEmailToName(principalEmail, name, ans, map);
-        });
-
-        return ans;
-
-    }
-
-    private static void mapPrincipalEmailToName(String principalEmail, String name, List<List<String>> ans, Map<String, Set<String>> map) {
-        List<String> account = new ArrayList<>();
-        account.add(name);
-        List<String> emails = new ArrayList<>(map.get(principalEmail));
-        Collections.sort(emails);
-        account.addAll(emails);
-        ans.add(account);
-    }
 
     public static List<List<String>> accountsMerge2(List<List<String>> accounts) {
         //Build graph
